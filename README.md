@@ -155,6 +155,19 @@ public class JBindProcess extends AbstractProcessor {
 
 解释都在注释里了，这段代码基本可以看作是模板，编写此类框架都要这样写，后续的处理基本上都是在 process() 方法中了。
 
+需要注意一个地方，之前说过注册注解器需要定义一个 javax.annotation.processing.Processor 文件，Google 官方给了一个插件可以自动生成这个文件，使用方式是在类名前加上注解：
+
+``` java
+@AutoService(Processor.class)
+public class JBindProcess extends AbstractProcessor
+```
+
+当然使用前需要引入一个包，在 build.gradle 中的 dependencies 标签中加入：
+
+``` gradle
+compile 'com.google.auto.service:auto-service:1.0-rc3'
+```
+
 #### 处理
 
 对于扫描到的注解，我们应该要把它结构化，在一个类里面含有的所有注解信息应该是一个对象，每一个注解信息也应该是一个对象。首先定义一个代表单个注解信息的类：
