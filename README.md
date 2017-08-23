@@ -16,16 +16,16 @@
 package com.example;
 public class MyProcess extends AbstractProcessor {
 	@Override
-    public synchronized void init(ProcessingEnvironment env){ }
+	public synchronized void init(ProcessingEnvironment env){ }
+    
+   	@Override
+   	public boolean process(Set<? extends TypeElement> annoations, RoundEnvironment env) { }
 
-    @Override
-    public boolean process(Set<? extends TypeElement> annoations, RoundEnvironment env) { }
+	@Override
+	public Set<String> getSupportedAnnotationTypes() { }
 
-    @Override
-    public Set<String> getSupportedAnnotationTypes() { }
-
-    @Override
-    public SourceVersion getSupportedSourceVersion() { }
+	@Override
+	public SourceVersion getSupportedSourceVersion() { }
 }
 ```
 
@@ -50,22 +50,22 @@ com.example.MyProcess
 
 ``` java
 public class ExampleActivity extends Activity {
-  	@BindView(R.id.title) TextView title;
-  	@BindView(R.id.subtitle) TextView subtitle;
-  	@BindView(R.id.footer) TextView footer;
-	Unbinder unbider;
+   	@BindView(R.id.title) TextView title;
+   	@BindView(R.id.subtitle) TextView subtitle;
+   	@BindView(R.id.footer) TextView footer;
+   	Unbinder unbider;
 
-  	@Override 
-	public void onCreate(Bundle savedInstanceState) {
-    	super.onCreate(savedInstanceState);
-    	setContentView(R.layout.simple_activity);
-    	unbider = ButterKnife.bind(this);
-  	}
-
-	@Override
-	public void onDestroy() {
-		unbider.unbid();
-	}
+   	@Override 
+   	public void onCreate(Bundle savedInstanceState) {
+      	super.onCreate(savedInstanceState);
+      	setContentView(R.layout.simple_activity);
+      	unbider = ButterKnife.bind(this);
+   	}
+    
+   	@Override
+   	public void onDestroy() {
+      	unbider.unbid();
+   	}
 }
 ```
 
@@ -96,7 +96,7 @@ public class ExampleActivity extends Activity {
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)
 public @interface JBind {
-     int value();
+    int value();
 }
 ```
 
@@ -117,37 +117,37 @@ public @interface JBind {
 
 ``` java
 public class JBindProcess extends AbstractProcessor {
-    // 里面包含一些方法获取有用的信息
-    private Elements elements;
-    // 用来生成文件的工具
-    private Filer filer;
-    // 日志辅助工具，在这个处理器内部出错都要使用这个
-    private Messager messager;
+   	// 里面包含一些方法获取有用的信息
+   	private Elements elements;
+   	// 用来生成文件的工具
+   	private Filer filer;
+   	// 日志辅助工具，在这个处理器内部出错都要使用这个
+   	private Messager messager;
 
-	@Override
-    public synchronized void init(ProcessingEnvironment processingEnvironment) {
-        super.init(processingEnvironment);
-        elements = processingEnvironment.getElementUtils();
-        filer = processingEnvironment.getFiler();
-        messager = processingEnvironment.getMessager();
-    }
+  	@Override
+   	public synchronized void init(ProcessingEnvironment processingEnvironment) {
+      	super.init(processingEnvironment);
+      	elements = processingEnvironment.getElementUtils();
+      	filer = processingEnvironment.getFiler();
+      	messager = processingEnvironment.getMessager();
+   	}
 
-    @Override
-    public Set<String> getSupportedAnnotationTypes() {
-        Set<String> annotataionTypes = new LinkedHashSet<>();
-        annotataionTypes.add(JBind.class.getCanonicalName());
-        return annotataionTypes;
-    }
+   	@Override
+   	public Set<String> getSupportedAnnotationTypes() {
+      	Set<String> annotataionTypes = new LinkedHashSet<>();
+      	annotataionTypes.add(JBind.class.getCanonicalName());
+      	return annotataionTypes;
+   	}
 
-    @Override
-    public SourceVersion getSupportedSourceVersion() {
-        return SourceVersion.RELEASE_7;
-    }
+   	@Override
+   	public SourceVersion getSupportedSourceVersion() {
+      	return SourceVersion.RELEASE_7;
+  	}
 
-    @Override
-    public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
-        // 获取所有使用 JBind 注解的元素
-        Set<? extends Element> elements = roundEnvironment.getElementsAnnotatedWith(JBind.class);
+   	@Override
+   	public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
+      	// 获取所有使用 JBind 注解的元素
+      	Set<? extends Element> elements = roundEnvironment.getElementsAnnotatedWith(JBind.class);
 		return false;
 	}
 }
@@ -175,26 +175,26 @@ compile 'com.google.auto.service:auto-service:1.0-rc3'
 ``` java
 // 每一个注解信息需要提供三个方法：获取注解元素类型，获取注解元素名称、获取注解值
 public class JBindField {
-    private VariableElement variableElement;
-    private int resId;
+   	private VariableElement variableElement;
+   	private int resId;
 
-    JBindField(VariableElement variableElement) {
-        this.variableElement = variableElement;
-        JBind bind = variableElement.getAnnotation(JBind.class);
-        resId = bind.value();
-    }
+   	JBindField(VariableElement variableElement) {
+      	this.variableElement = variableElement;
+      	JBind bind = variableElement.getAnnotation(JBind.class);
+      	resId = bind.value();
+   	}
 
-    int getResId() {
-        return resId;
-    }
+   	int getResId() {
+      	return resId;
+   	}
 
-    String getFiledName() {
-        return variableElement.getSimpleName().toString();
-    }
+   	String getFiledName() {
+      	return variableElement.getSimpleName().toString();
+   	}
 
-    TypeMirror getFiledType() {
-        return variableElement.asType();
-    }
+   	TypeMirror getFiledType() {
+      	return variableElement.asType();
+   	}
 } 
 ```
 
@@ -202,19 +202,19 @@ public class JBindField {
 
 ``` java
 public class JBindClass {
-    private Elements elements;
-    private TypeElement typeElement;
-    private List<JBindField> jBindFields;
+   	private Elements elements;
+   	private TypeElement typeElement;
+   	private List<JBindField> jBindFields;
 
-    JBindClass(Elements elements, TypeElement typeElement) {
-        this.elements = elements;
-        this.typeElement = typeElement;
-        jBindFields = new ArrayList<>();
-    }
+  	JBindClass(Elements elements, TypeElement typeElement) {
+      	this.elements = elements;
+      	this.typeElement = typeElement;
+      	jBindFields = new ArrayList<>();
+   	}
 
-    void addField(JBindField jBindField) {
-        jBindFields.add(jBindField);
-    }
+   	void addField(JBindField jBindField) {
+      	jBindFields.add(jBindField);
+   	}
 }
 ```
 
@@ -226,18 +226,18 @@ Messager 是 Javac 在编译过程中用来打印日志的辅助工具，但它�
 
 ``` java
 private void error(Element element, String message, Object... args) {
-    printMessage(Diagnostic.Kind.ERROR, element, message, args);
+   	printMessage(Diagnostic.Kind.ERROR, element, message, args);
 }
 
 private void note(Element element, String message, Object... args) {
-    printMessage(Diagnostic.Kind.NOTE, element, message, args);
+   	printMessage(Diagnostic.Kind.NOTE, element, message, args);
 }
 
 private void printMessage(Diagnostic.Kind kind, Element element, String message, Object[] args) {
-    if (args.length > 0) {
-        message = String.format(message, args);
-    }
-    messager.printMessage(kind, message, element);
+   	if (args.length > 0) {
+      	message = String.format(message, args);
+   	}
+   	messager.printMessage(kind, message, element);
 }
 ```
 
@@ -245,46 +245,46 @@ private void printMessage(Diagnostic.Kind kind, Element element, String message,
 
 ``` java
 private static boolean isSubtypeOfType(TypeMirror typeMirror, String type) {
-    if (typeMirror == null || type == null || type.isEmpty()) {
-        return false;
-    }
-    if (type.equals(typeMirror.toString())) {
-        return true;
-    }
-    if (typeMirror.getKind() != TypeKind.DECLARED) {
-        return false;
-    }
-    DeclaredType declaredType = (DeclaredType) typeMirror;
-    List<? extends TypeMirror> typeArguments = declaredType.getTypeArguments();
-    if (typeArguments.size() > 0) {
-        StringBuilder typeString = new StringBuilder(declaredType.asElement().toString());
-        typeString.append('<');
-        for (int i = 0; i < typeArguments.size(); i++) {
-            if (i > 0) {
-                typeString.append(',');
-            }
-            typeString.append('?');
-        }
-        typeString.append('>');
-        if (typeString.toString().equals(type)) {
-            return true;
-        }
-    }
-    Element element = declaredType.asElement();
-    if (!(element instanceof TypeElement)) {
-        return false;
-    }
-    TypeElement typeElement = (TypeElement) element;
-    TypeMirror superType = typeElement.getSuperclass();
-    if (isSubtypeOfType(superType, type)) {
-        return true;
-    }
-    for (TypeMirror interfaceType : typeElement.getInterfaces()) {
-        if (isSubtypeOfType(interfaceType, type)) {
-            return true;
-        }
-    }
-    return false;
+   	if (typeMirror == null || type == null || type.isEmpty()) {
+      	return false;
+   	}
+   	if (type.equals(typeMirror.toString())) {
+      	return true;
+   	}
+   	if (typeMirror.getKind() != TypeKind.DECLARED) {
+      	return false;
+   	}
+   	DeclaredType declaredType = (DeclaredType) typeMirror;
+   	List<? extends TypeMirror> typeArguments = declaredType.getTypeArguments();
+   	if (typeArguments.size() > 0) {
+      	StringBuilder typeString = new StringBuilder(declaredType.asElement().toString());
+      	typeString.append('<');
+      	for (int i = 0; i < typeArguments.size(); i++) {
+         	if (i > 0) {
+            	typeString.append(',');
+         	}
+         	typeString.append('?');
+      	}
+      	typeString.append('>');
+      	if (typeString.toString().equals(type)) {
+         	return true;
+      	}
+   	}
+   	Element element = declaredType.asElement();
+   	if (!(element instanceof TypeElement)) {
+      	return false;
+   	}
+   	TypeElement typeElement = (TypeElement) element;
+   	TypeMirror superType = typeElement.getSuperclass();
+   	if (isSubtypeOfType(superType, type)) {
+   	   return true;
+  	 }
+   	for (TypeMirror interfaceType : typeElement.getInterfaces()) {
+    	if (isSubtypeOfType(interfaceType, type)) {
+     	 	return true;
+      	}
+   	}
+  	return false;
 }
 ```
 
@@ -293,50 +293,50 @@ private static boolean isSubtypeOfType(TypeMirror typeMirror, String type) {
 ``` java
  @Override
 public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
-    // 记录扫描到的指定的注解信息
-    Map<TypeElement, JBindClass> jBindClassMap = new LinkedHashMap<>();
-    // 获取所有使用 JBind 注解的元素
-    Set<? extends Element> elements = roundEnvironment.getElementsAnnotatedWith(JBind.class);
-    for (Element element : elements) {
-        // 检查是否为 VariableElement
-        if (!(element instanceof VariableElement)) {
-            error(element, "%s is not a variable element." + element.getSimpleName());
-            return true;
-        }
+ 	// 记录扫描到的指定的注解信息
+   	Map<TypeElement, JBindClass> jBindClassMap = new LinkedHashMap<>();
+   	// 获取所有使用 JBind 注解的元素
+   	Set<? extends Element> elements = roundEnvironment.getElementsAnnotatedWith(JBind.class);
+   	for (Element element : elements) {
+      	// 检查是否为 VariableElement
+      	if (!(element instanceof VariableElement)) {
+       	error(element, "%s is not a variable element." + element.getSimpleName());
+         	return true;
+      	}
 
-        // 获取 TypeElement
-        TypeElement typeElement = (TypeElement) element.getEnclosingElement();
-        // 获取 VariableElement
-        VariableElement variableElement = (VariableElement) element;
+      	// 获取 TypeElement
+      	TypeElement typeElement = (TypeElement) element.getEnclosingElement();
+      	// 获取 VariableElement
+      	VariableElement variableElement = (VariableElement) element;
 
-        // 判断注解的变量修饰符有没有 private、final 以及 static
-        for (Modifier modifier:variableElement.getModifiers()) {
-            if (modifier == Modifier.FINAL || modifier == Modifier.PRIVATE || modifier == Modifier.STATIC) {
-                error(element, "@Bind fields (%s) must not be private, final or static.", typeElement.asType().toString() + "." + variableElement.getSimpleName());
-                return true;
+      	// 判断注解的变量修饰符有没有 private、final 以及 static
+      	for (Modifier modifier:variableElement.getModifiers()) {
+         	if (modifier == Modifier.FINAL || modifier == Modifier.PRIVATE || modifier == Modifier.STATIC) {
+         	   error(element, "@Bind fields (%s) must not be private, final or static.", typeElement.asType().toString() + "." + variableElement.getSimpleName());
+       	   return true;
             }
         }
 
-        // 判断注解的变量类型是不是 View 及其子孙类
-        if (!isSubtypeOfType(element.asType(), Type_View)) {
-            error(element, "@Bind fields must extend from View, is not extends from %s.", element.asType().toString());
-            return true;
-        }
+      	// 判断注解的变量类型是不是 View 及其子孙类
+      	if (!isSubtypeOfType(element.asType(), Type_View)) {
+        	 error(element, "@Bind fields must extend from View, is not extends from %s.", element.asType().toString());
+        	 return true;
+      	}
 
-        // 判断注解所属的类是不是 Activity 及其子孙类
-        if (!isSubtypeOfType(typeElement.asType(), Type_Activity)) {
-            error(element, "@Bind fields must in class of extends from Activity, not in class of extends from %s.", typeElement.asType().toString());
-            return true;
-        }
+      	// 判断注解所属的类是不是 Activity 及其子孙类
+      	if (!isSubtypeOfType(typeElement.asType(), Type_Activity)) {
+      	  	error(element, "@Bind fields must in class of extends from Activity, not in class of extends from %s.", typeElement.asType().toString());
+    		return true;
+      	}
 
-        // 注解信息初始化
-        JBindClass jBindClass = jBindClassMap.get(typeElement);
-        if (jBindClass == null) {
-            jBindClass = new JBindClass(this.elements, typeElement);
-            jBindClassMap.put(typeElement, jBindClass);
-        }
-        jBindClass.addField(new JBindField(variableElement));
-    }
+      	// 注解信息初始化
+      	JBindClass jBindClass = jBindClassMap.get(typeElement);
+      	if (jBindClass == null) {
+      		jBindClass = new JBindClass(this.elements, typeElement);
+      	 	jBindClassMap.put(typeElement, jBindClass);
+      	}
+      	jBindClass.addField(new JBindField(variableElement));
+   	}
 	return false;
 }
 ```
@@ -351,20 +351,20 @@ public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnv
 // 有这个注解是因为 Android 在编译时会检查 findViewById() 的参数是否为 @ResId 类型，这里忽略了检查，否则编译不通过
 @SuppressWarnings("ResourceType")
 public class MainActivity_JBind {
-	MainActivity activity;
+   	MainActivity activity;
 
-    public MainActivity_JBind(MainActivity activity) {
-        this(activity, activity.getWindow().getDecorView());
-    }
+   	public MainActivity_JBind(MainActivity activity) {
+      	this(activity, activity.getWindow().getDecorView());
+  	}
 
-	// 有两个构造方法是为了扩展考虑，这里一个构造器也行
-    public MainActivity_JBind(MainActivity activity, View view) {
-        if (activity == null) {
-            return;
-        }
-        this.activity = activity;
-        activity.textView = (TextView) view.findViewById(xxx);
-    }
+  	// 有两个构造方法是为了扩展考虑，这里一个构造器也行
+  	public MainActivity_JBind(MainActivity activity, View view) {
+     	if (activity == null) {
+        	return;
+     	}
+     	this.activity = activity;
+      	activity.textView = (TextView) view.findViewById(xxx);
+   	}
 }
 ```
 
@@ -374,13 +374,13 @@ public class MainActivity_JBind {
 
 ``` java
 public interface Unbinder {
-    void unbind();
+   	void unbind();
 
-    Unbinder Empty = new Unbinder() {
-        @Override
-        public void unbind() {
-        }
-    };
+   	Unbinder Empty = new Unbinder() {
+     	@Override
+     	public void unbind() {
+      	}
+   	};
 }
 ```
 
@@ -391,29 +391,29 @@ public interface Unbinder {
 ``` java
 @SuppressWarnings("ResourceType")
 public class MainActivity_JBind implements Unbinder {
-	MainActivity activity;
+   	MainActivity activity;
 
-    public MainActivity_JBind(MainActivity activity) {
-        this(activity, activity.getWindow().getDecorView());
+   	public MainActivity_JBind(MainActivity activity) {
+   	   this(activity, activity.getWindow().getDecorView());
+   	}
+
+   	public MainActivity_JBind(MainActivity activity, View view) {
+   		if (activity == null) {
+        	return;
+      	}
+      	this.activity = activity;
+      	activity.textView = (TextView) view.findViewById(xxx);
+   	}
+
+   	@Override
+   	public void unbind() {
+     	if (activity == null) {
+       	return;
+      	}
+      	activity.textView = null;
+      	activity.textView2 = null;
+      	activity = null;
     }
-
-    public MainActivity_JBind(MainActivity activity, View view) {
-        if (activity == null) {
-            return;
-        }
-        this.activity = activity;
-        activity.textView = (TextView) view.findViewById(xxx);
-    }
-
-  	@Override
-  	public void unbind() {
-    	if (activity == null) {
-      		return;
-    	}
-    	activity.textView = null;
-    	activity.textView2 = null;
-    	activity = null;
-  	}
 }
 ```
 
@@ -427,59 +427,59 @@ private static final ClassName Unbinder = ClassName.get("com.jinchim.jbind_sdk",
 private static final ClassName View = ClassName.get("android.view", "View");
 
 JavaFile prepareFile() {
-    // 添加构造器
-    MethodSpec.Builder constructor1 = MethodSpec
-            .constructorBuilder()
-            .addModifiers(Modifier.PUBLIC)
-            .addParameter(TypeName.get(typeElement.asType()), "activity")
-            .addStatement("this(activity, activity.getWindow().getDecorView())");
+   	// 添加构造器
+   	MethodSpec.Builder constructor1 = MethodSpec
+   		.constructorBuilder()
+      	.addModifiers(Modifier.PUBLIC)
+      	.addParameter(TypeName.get(typeElement.asType()), "activity")
+      	.addStatement("this(activity, activity.getWindow().getDecorView())");
     MethodSpec.Builder constructor2 = MethodSpec
-            .constructorBuilder()
-            .addModifiers(Modifier.PUBLIC)
-            // 这里是添加方法参数，需要指定参数类型和参数变量
-            // 先使用 TypeElement 的 asType() 方法拿到 TypeMirror，再使用 TypeName 的 get() 方法拿到当前注解信息所属的类名称（当前类名当然是注解所在的类）
-            .addParameter(TypeName.get(typeElement.asType()), "activity")
-            .addParameter(View, "view")
-            // 添加代码，进行为空的判断
-            .beginControlFlow("if (activity == null)")
-            .addStatement("return")
-            .endControlFlow()
-            // 添加代码，进行成员变量赋值
-            .addStatement("this.activity = activity");
-    for (JBindField jBindField : jBindFields) {
-        // 添加代码，$N 用于指定对象成员变量，&T 用于指定类型，$L 用于方法参数
-        constructor2.addStatement("activity.$N = ($T) view.findViewById($L)", jBindField.getFiledName(), jBindField.getFiledType(), jBindField.getResId());
+    	.constructorBuilder()
+      	.addModifiers(Modifier.PUBLIC)
+      	// 这里是添加方法参数，需要指定参数类型和参数变量
+      	// 先使用 TypeElement 的 asType() 方法拿到 TypeMirror，再使用 TypeName 的 get() 方法拿到当前注解信息所属的类名称（当前类名当然是注解所在的类）
+      	.addParameter(TypeName.get(typeElement.asType()), "activity")
+      	.addParameter(View, "view")
+      	// 添加代码，进行为空的判断
+     	.beginControlFlow("if (activity == null)")
+      	.addStatement("return")
+      	.endControlFlow()
+      	// 添加代码，进行成员变量赋值
+      	.addStatement("this.activity = activity");
+   	for (JBindField jBindField : jBindFields) {
+      	// 添加代码，$N 用于指定对象成员变量，&T 用于指定类型，$L 用于方法参数
+      	constructor2.addStatement("activity.$N = ($T) view.findViewById($L)", jBindField.getFiledName(), jBindField.getFiledType(), jBindField.getResId());
     }
-    // 添加 unbind() 方法
-    MethodSpec.Builder unbind = MethodSpec
-            .methodBuilder("unbind")
-            .addAnnotation(Override.class)
-            .addModifiers(Modifier.PUBLIC)
-            .beginControlFlow("if (activity == null)")
-            .addStatement("return")
-            .endControlFlow();
-    for (JBindField jBindField : jBindFields) {
-        unbind.addStatement("activity.$N = null", jBindField.getFiledName());
-    }
-    unbind.addStatement("activity = null");
-    // 添加成员变量
-    FieldSpec.Builder field = FieldSpec.builder(TypeName.get(typeElement.asType()), "activity");
-    // 添加类注解
-    AnnotationSpec.Builder suppressWarnings = AnnotationSpec
-            .builder(SuppressWarnings.class)
-            .addMember("value", "\"ResourceType\"");
-    // 构建类对象
-    TypeSpec typeSpec = TypeSpec
-            .classBuilder(typeElement.getSimpleName() + "_JBind")
-            .addModifiers(Modifier.PUBLIC)
-            .addAnnotation(suppressWarnings.build())
-            .addSuperinterface(Unbinder)
-            .addField(field.build())
-            .addMethod(constructor1.build())
-            .addMethod(constructor2.build())
-            .addMethod(unbind.build())
-            .build();
-    return JavaFile.builder(elements.getPackageOf(typeElement).getQualifiedName().toString(), typeSpec).build();
+   	// 添加 unbind() 方法
+   	MethodSpec.Builder unbind = MethodSpec
+   		.methodBuilder("unbind")
+      	.addAnnotation(Override.class)
+      	.addModifiers(Modifier.PUBLIC)
+      	.beginControlFlow("if (activity == null)")
+      	.addStatement("return")
+      	.endControlFlow();
+   	for (JBindField jBindField : jBindFields) {
+    	  unbind.addStatement("activity.$N = null", jBindField.getFiledName());
+   	}
+   	unbind.addStatement("activity = null");
+   	// 添加成员变量
+   	FieldSpec.Builder field = FieldSpec.builder(TypeName.get(typeElement.asType()), "activity");
+   	// 添加类注解
+   	AnnotationSpec.Builder suppressWarnings = AnnotationSpec
+   		.builder(SuppressWarnings.class)
+      	.addMember("value", "\"ResourceType\"");
+   	// 构建类对象
+   	TypeSpec typeSpec = TypeSpec
+   		.classBuilder(typeElement.getSimpleName() + "_JBind")
+     	.addModifiers(Modifier.PUBLIC)
+      	.addAnnotation(suppressWarnings.build())
+      	.addSuperinterface(Unbinder)
+      	.addField(field.build())
+      	.addMethod(constructor1.build())
+      	.addMethod(constructor2.build())
+      	.addMethod(unbind.build())
+      	.build();
+   	return JavaFile.builder(elements.getPackageOf(typeElement).getQualifiedName().toString(), typeSpec).build();
 }
 ```
 
@@ -488,32 +488,31 @@ JavaFile prepareFile() {
 ``` java
  @Override
 public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
-    // 记录扫描到的指定的注解信息
-    Map<TypeElement, JBindClass> jBindClassMap = new LinkedHashMap<>();
-    // 获取所有使用 JBind 注解的元素
-    Set<? extends Element> elements = roundEnvironment.getElementsAnnotatedWith(JBind.class);
-    for (Element element : elements) {
+   	// 记录扫描到的指定的注解信息
+   	Map<TypeElement, JBindClass> jBindClassMap = new LinkedHashMap<>();
+   	// 获取所有使用 JBind 注解的元素
+   	Set<? extends Element> elements = roundEnvironment.getElementsAnnotatedWith(JBind.class);
+   	for (Element element : elements) {
 		... // 表示之前的代码
-
-        // 注解信息初始化
-        JBindClass jBindClass = jBindClassMap.get(typeElement);
-        if (jBindClass == null) {
-            jBindClass = new JBindClass(this.elements, typeElement);
-            jBindClassMap.put(typeElement, jBindClass);
-        }
-        jBindClass.addField(new JBindField(variableElement));
-    }
-    // 生成代码文件
-    for (TypeElement typeElement : jBindClassMap.keySet()) {
-        JBindClass jBindClass = jBindClassMap.get(typeElement);
-        try {
-            jBindClass.prepareFile().writeTo(filer);
-        } catch (IOException e) {
-            error(typeElement, "Generate file failed, reason: %s.", e.getMessage());
-            return true;
-        }
-    }
-	return false;
+      	// 注解信息初始化
+      	JBindClass jBindClass = jBindClassMap.get(typeElement);
+      	if (jBindClass == null) {
+     		jBindClass = new JBindClass(this.elements, typeElement);
+        	jBindClassMap.put(typeElement, jBindClass);
+      	}
+      	jBindClass.addField(new JBindField(variableElement));
+   	}
+   	// 生成代码文件
+   	for (TypeElement typeElement : jBindClassMap.keySet()) {
+   		JBindClass jBindClass = jBindClassMap.get(typeElement);
+      	try {
+        	jBindClass.prepareFile().writeTo(filer);
+      	} catch (IOException e) {
+         	error(typeElement, "Generate file failed, reason: %s.", e.getMessage());
+         	return true;
+      	}
+   	}
+   	return false;
 }
 ```
 
@@ -525,23 +524,23 @@ public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnv
 
 ``` java
 public class JBindSDK {
-    private final static String TAG = JBindSDK.class.getSimpleName();
-    private static Map<Class<?>, Constructor<? extends Unbinder>> map = new LinkedHashMap<>();
+   	private final static String TAG = JBindSDK.class.getSimpleName();
+   	private static Map<Class<?>, Constructor<? extends Unbinder>> map = new LinkedHashMap<>();
 
-    public static Unbinder bind(Activity activity) {
-        String className = activity.getPackageName() + "." + activity.getLocalClassName() + "_JBind";
-        try {
-            Class clazz = Class.forName(className);
-            Constructor<? extends Unbinder> constructor = map.get(clazz);
-            if (constructor == null) {
-                constructor = clazz.getConstructor(activity.getClass());
-                map.put(clazz, constructor);
-            }
-            return constructor.newInstance(activity);
-        } catch (Exception e) {
-            return Unbinder.Empty;
-        }
-    }
+   	public static Unbinder bind(Activity activity) {
+      	String className = activity.getPackageName() + "." + activity.getLocalClassName() + "_JBind";
+      	try {
+         	Class clazz = Class.forName(className);
+         	Constructor<? extends Unbinder> constructor = map.get(clazz);
+         	if (constructor == null) {
+            	constructor = clazz.getConstructor(activity.getClass());
+            	map.put(clazz, constructor);
+         	}
+         	return constructor.newInstance(activity);
+      	} catch (Exception e) {
+        	return Unbinder.Empty;
+      	}
+   	}
 }
 ```
 
