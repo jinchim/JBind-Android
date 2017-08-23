@@ -1,7 +1,7 @@
 package com.jinchim.jbind.compiler;
 
 import com.google.auto.service.AutoService;
-import com.jinchim.jbind.annotations.Bind;
+import com.jinchim.jbind.annotations.JBind;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -53,7 +53,7 @@ public class JBindProcess extends AbstractProcessor {
     @Override
     public Set<String> getSupportedAnnotationTypes() {
         Set<String> annotataionTypes = new LinkedHashSet<>();
-        annotataionTypes.add(Bind.class.getCanonicalName());
+        annotataionTypes.add(JBind.class.getCanonicalName());
         return annotataionTypes;
     }
 
@@ -67,8 +67,8 @@ public class JBindProcess extends AbstractProcessor {
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
         // 记录扫描到的指定的注解信息
         Map<TypeElement, JBindClass> jBindClassMap = new LinkedHashMap<>();
-        // 获取所有使用 Bind 注解的元素
-        Set<? extends Element> elements = roundEnvironment.getElementsAnnotatedWith(Bind.class);
+        // 获取所有使用 JBind 注解的元素
+        Set<? extends Element> elements = roundEnvironment.getElementsAnnotatedWith(JBind.class);
         for (Element element : elements) {
             // 检查是否为 VariableElement
             if (!(element instanceof VariableElement)) {

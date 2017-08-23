@@ -1,6 +1,6 @@
 package com.jinchim.jbind.compiler;
 
-import com.jinchim.jbind.annotations.Bind;
+import com.jinchim.jbind.annotations.JBind;
 
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
@@ -14,7 +14,7 @@ public class JBindField {
 
     JBindField(VariableElement variableElement) {
         this.variableElement = variableElement;
-        Bind bind = variableElement.getAnnotation(Bind.class);
+        JBind bind = variableElement.getAnnotation(JBind.class);
         resId = bind.value();
     }
 

@@ -72,6 +72,7 @@ public class JBindClass {
         for (JBindField jBindField : jBindFields) {
             unbind.addStatement("activity.$N = null", jBindField.getFiledName());
         }
+        unbind.addStatement("activity = null");
 
         // 添加成员变量
         FieldSpec.Builder field = FieldSpec.builder(TypeName.get(typeElement.asType()), "activity");

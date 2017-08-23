@@ -4,14 +4,14 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
-import com.jinchim.jbind.annotations.Bind;
+import com.jinchim.jbind.annotations.JBind;
 import com.jinchim.jbind_sdk.JBindSDK;
 import com.jinchim.jbind_sdk.Unbinder;
 
 public class MainActivity extends AppCompatActivity {
 
-    @Bind(R.id.tv) TextView textView;
-    @Bind(R.id.tv2) TextView textView2;
+    @JBind(R.id.tv) TextView textView;
+    @JBind(R.id.tv2) TextView textView2;
 
     Unbinder unbinder;
 
