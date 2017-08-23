@@ -1,5 +1,6 @@
 package com.jinchim.jbind.compiler;
 
+import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
@@ -7,7 +8,6 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,10 +76,16 @@ public class JBindClass {
         // 添加成员变量
         FieldSpec.Builder field = FieldSpec.builder(TypeName.get(typeElement.asType()), "activity");
 
-        // 添加类信息
+        // 添加类注解
+        AnnotationSpec.Builder suppressWarnings = AnnotationSpec
+                .builder(SuppressWarnings.class)
+                .addMember("value", "\"ResourceType\"");
+
+        // 构建类对象
         TypeSpec typeSpec = TypeSpec
                 .classBuilder(typeElement.getSimpleName() + "_JBind")
                 .addModifiers(Modifier.PUBLIC)
+                .addAnnotation(suppressWarnings.build())
                 .addSuperinterface(Unbinder)
                 .addField(field.build())
                 .addMethod(constructor1.build())

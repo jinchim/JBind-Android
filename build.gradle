@@ -9,6 +9,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.3'
         classpath 'me.tatarka:gradle-retrolambda:3.4.0' // lambda表达式
+        classpath 'com.novoda:bintray-release:0.3.4' // jcenter
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -19,9 +20,16 @@ allprojects {
     repositories {
         jcenter()
     }
-    // 解决编码 GBK 的不可映射字符的错误
+    // 解决编译时编码 GBK 的不可映射字符的错误
     tasks.withType(JavaCompile) {
         options.encoding = "UTF-8"
+    }
+    // 解决上传到 bintray 时的编码 GBK 的不可映射字符错误
+    tasks.withType(Javadoc) {
+        options {
+            encoding "UTF-8"
+            charSet 'UTF-8'
+        }
     }
 }
 
@@ -29,3 +37,19 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
+// jcenter
+ext {
+    userOrg = 'jinwu1' // bintray 用户名，这个是网站上 url 上的用户名
+    groupId = 'com.jinchim' // jcenter 上的路径
+    publishVersion = '1.0.0' // 版本号
+    desc = 'bindsdk' // 描述，不重要
+    website = 'https://github.com/jinchim/JBind-Android' // 网站，不重要，尽量模拟 github 上的地址
+    licences = ['Apache-2.0'] // 指定许可证
+}
+
+
+// 上传到 bintray 的命令
+// gradlew clean build bintrayUpload
+// -PbintrayUser=a463674420 （这里是网站头像旁边对应的帐号，有可能跟网址上面的不一样，一定要区分好）
+// -PbintrayKey=6f5e4e11d2d253a2d4************** （这个是上面让大家复制保存下来的key[这里为了安全，我将我key后几位替换成了**]）
+// -PdryRun=false（如果是false那么就会真实提交，如果是true不会去进行真实提交，但是会编译，可以去查看是否编译通过在提交）
