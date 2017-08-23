@@ -291,7 +291,7 @@ private static boolean isSubtypeOfType(TypeMirror typeMirror, String type) {
 这里要稍微解释下 TypeMirror。Element 代表的是源代码，TypeElement 代表的是源代码中的类型元素，例如类。然而，TypeElement 并不包含类本身的信息。我们可以从 TypeElement 中获取类的名字，但是获取不到类的信息，例如它的父类。这种信息需要通过 TypeMirror 获取。我们可以通过调用 Element 对象的 asType() 获取元素的 TypeMirror。有了这个方法，我们便开始再 process() 方法里面写代码：
 
 ``` java
- @Override
+@Override
 public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
     // 记录扫描到的指定的注解信息
     Map<TypeElement, JBindClass> jBindClassMap = new LinkedHashMap<>();
