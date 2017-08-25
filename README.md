@@ -15,6 +15,8 @@ annotationProcessor "com.jinchim:jbind-compiler:1.0.2"
 
 ``` java
 Unbinder unbinder;
+
+@Override
 protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     unbinder = JBindSDK.bind(this);
