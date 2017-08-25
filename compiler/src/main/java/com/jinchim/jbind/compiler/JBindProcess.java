@@ -33,6 +33,8 @@ public class JBindProcess extends AbstractProcessor {
 
     private static final String Type_View = "android.view.View";
     private static final String Type_Activity = "android.app.Activity";
+    private static final String Type_Fragment = "android.app.Fragment";
+    private static final String Type_FragmentForV4 = "android.support.v4.app.Fragment";
 
     // 里面包含一些方法获取有用的信息
     private Elements elements;

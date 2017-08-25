@@ -19,11 +19,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         unbinder = JBindSDK.bind(this);
 
-        textView.setText("tv1");
-        textView2.setText("tv2");
-
+        textView.setText("activity1");
+        textView2.setText("activity2");
     }
 
     @Override
@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         unbinder.unbind();
     }
+
 
 
 

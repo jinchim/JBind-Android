@@ -20,6 +20,7 @@ public class JBindClass {
     // 这里使用 ClassName 的 get() 方法拿到指定具体路径的类名称
     private static final ClassName Unbinder = ClassName.get("com.jinchim.jbind_sdk", "Unbinder");
     private static final ClassName View = ClassName.get("android.view", "View");
+    private static final ClassName Utils = ClassName.get("com.jinchim.jbind_sdk", "Utils");
 
     private Elements elements;
     private TypeElement typeElement;
@@ -58,7 +59,8 @@ public class JBindClass {
                 .addStatement("this.activity = activity");
         for (JBindField jBindField : jBindFields) {
             // 添加代码，$N 用于指定对象成员变量，&T 用于指定类型，$L 用于方法参数
-            constructor2.addStatement("activity.$N = ($T) view.findViewById($L)", jBindField.getFiledName(), jBindField.getFiledType(), jBindField.getResId());
+//            constructor2.addStatement("activity.$N = ($T) view.findViewById($L)", jBindField.getFiledName(), jBindField.getFiledType(), jBindField.getResId());
+            constructor2.addStatement("activity.$N = $T.findViewAsType(view, $L, \"$L\", $L.class)", jBindField.getFiledName(), Utils, jBindField.getResId(), jBindField.getFiledName(), jBindField.getFiledType());
         }
 
         // 添加 unbind() 方法

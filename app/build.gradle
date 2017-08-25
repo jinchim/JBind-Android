@@ -7,7 +7,7 @@ android {
     defaultConfig {
         applicationId "com.jinchim.jbind"
         minSdkVersion 14
-        targetSdkVersion 22
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
     }
@@ -28,4 +28,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:26.+'
     compile project(':jbind_sdk')
     annotationProcessor project(':compiler')
+//    compile 'com.jinchim:jbind:1.0.1'
+//    annotationProcessor "com.jinchim:jbind-compiler:1.0.1"
 }
