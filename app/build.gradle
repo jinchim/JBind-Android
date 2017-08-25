@@ -28,6 +28,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:26.+'
     compile project(':jbind_sdk')
     annotationProcessor project(':compiler')
-//    compile 'com.jinchim:jbind:1.0.1'
-//    annotationProcessor "com.jinchim:jbind-compiler:1.0.1"
+//    compile 'com.jinchim:jbind:1.0.2'
+//    annotationProcessor "com.jinchim:jbind-compiler:1.0.2"
 }
