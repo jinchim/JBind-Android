@@ -7,9 +7,9 @@ import java.lang.annotation.Target;
 
 
 @Retention(RetentionPolicy.CLASS)
-@Target(ElementType.FIELD)
-public @interface JBind {
+@Target(ElementType.METHOD)
+public @interface JClick {
 
-     int value();
+     int[] value();
 
 }

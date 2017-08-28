@@ -2,6 +2,7 @@ package com.jinchim.jbind.compiler;
 
 import com.google.auto.service.AutoService;
 import com.jinchim.jbind.annotations.JBind;
+import com.jinchim.jbind.annotations.JClick;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -18,6 +19,7 @@ import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
@@ -56,6 +58,7 @@ public class JBindProcess extends AbstractProcessor {
     public Set<String> getSupportedAnnotationTypes() {
         Set<String> annotataionTypes = new LinkedHashSet<>();
         annotataionTypes.add(JBind.class.getCanonicalName());
+        annotataionTypes.add(JClick.class.getCanonicalName());
         return annotataionTypes;
     }
 
@@ -69,48 +72,9 @@ public class JBindProcess extends AbstractProcessor {
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
         // 记录扫描到的指定的注解信息
         Map<TypeElement, JBindClass> jBindClassMap = new LinkedHashMap<>();
-        // 获取所有使用 JBind 注解的元素
-        Set<? extends Element> elements = roundEnvironment.getElementsAnnotatedWith(JBind.class);
-        for (Element element : elements) {
-            // 检查是否为 VariableElement
-            if (!(element instanceof VariableElement)) {
-                error(element, "%s is not a variable element." + element.getSimpleName());
-                return true;
-            }
-
-            // 获取 TypeElement
-            TypeElement typeElement = (TypeElement) element.getEnclosingElement();
-            // 获取 VariableElement
-            VariableElement variableElement = (VariableElement) element;
-
-            // 判断注解的变量修饰符有没有 private、final 以及 static
-            for (Modifier modifier:variableElement.getModifiers()) {
-                if (modifier == Modifier.FINAL || modifier == Modifier.PRIVATE || modifier == Modifier.STATIC) {
-                    error(element, "@Bind fields (%s) must not be private, final or static.", typeElement.asType().toString() + "." + variableElement.getSimpleName());
-                    return true;
-                }
-            }
-
-            // 判断注解的变量类型是不是 View 及其子孙类
-            if (!isSubtypeOfType(element.asType(), Type_View)) {
-                error(element, "@Bind fields must extend from View, is not extends from %s.", element.asType().toString());
-                return true;
-            }
-
-            // 判断注解所属的类是不是 Activity 及其子孙类
-            if (!isSubtypeOfType(typeElement.asType(), Type_Activity)) {
-                error(element, "@Bind fields must in class of extends from Activity, not in class of extends from %s.", typeElement.asType().toString());
-                return true;
-            }
-
-            // 注解信息初始化
-            JBindClass jBindClass = jBindClassMap.get(typeElement);
-            if (jBindClass == null) {
-                jBindClass = new JBindClass(this.elements, typeElement);
-                jBindClassMap.put(typeElement, jBindClass);
-            }
-            jBindClass.addField(new JBindField(variableElement));
-        }
+        // 解析指定的注解
+        parseJBind(jBindClassMap, roundEnvironment.getElementsAnnotatedWith(JBind.class));
+        parseJClick(jBindClassMap, roundEnvironment.getElementsAnnotatedWith(JClick.class));
 
         // 生成代码文件
         for (TypeElement typeElement : jBindClassMap.keySet()) {
@@ -125,6 +89,90 @@ public class JBindProcess extends AbstractProcessor {
 
         return false;
     }
+
+    private void parseJBind(Map<TypeElement, JBindClass> jBindClassMap, Set<? extends Element> elements) {
+        for (Element element : elements) {
+            // 检查是否为 VariableElement（成员变量）
+            if (!(element instanceof VariableElement)) {
+                error(element, "%s is not a variable element." + element.getSimpleName());
+            }
+
+            // 获取 TypeElement
+            TypeElement typeElement = (TypeElement) element.getEnclosingElement();
+            // 获取 VariableElement
+            VariableElement variableElement = (VariableElement) element;
+
+            // 判断注解的变量修饰符有没有 private、final 以及 static
+            for (Modifier modifier : variableElement.getModifiers()) {
+                if (modifier == Modifier.FINAL || modifier == Modifier.PRIVATE || modifier == Modifier.STATIC) {
+                    error(element, "J@Bind field '%s' must not be private, final or static.", typeElement.asType().toString() + "." + variableElement.getSimpleName());
+                }
+            }
+
+            // 判断注解所属的类是不是 Activity 或 Fragment（包括两个包下面的） 及其子孙类
+            if (!isSubtypeOfType(typeElement.asType(), Type_Activity) && !isSubtypeOfType(typeElement.asType(), Type_Fragment) && !isSubtypeOfType(typeElement.asType(), Type_FragmentForV4)) {
+                error(element, "@JBind field must in class extends from Activity or Fragment, not in class extends from %s.", typeElement.asType().toString());
+            }
+
+            // 判断注解的变量类型是不是 View 及其子孙类
+            if (!isSubtypeOfType(element.asType(), Type_View)) {
+                error(element, "@JBind field must extend from View, is not extends from %s.", element.asType().toString());
+            }
+
+            // 注解信息初始化
+            JBindClass jBindClass = jBindClassMap.get(typeElement);
+            if (jBindClass == null) {
+                jBindClass = new JBindClass(this.elements, typeElement);
+                jBindClassMap.put(typeElement, jBindClass);
+            }
+            jBindClass.addField(new JBindField(variableElement));
+        }
+    }
+
+    private void parseJClick(Map<TypeElement, JBindClass> jBindClassMap, Set<? extends Element> elements) {
+        for (Element element : elements) {
+            // 检查是否为 ExecutableElement（方法）
+            if (!(element instanceof ExecutableElement)) {
+                error(element, "%s is not a executable element." + element.getSimpleName());
+            }
+
+            // 获取 TypeElement
+            TypeElement typeElement = (TypeElement) element.getEnclosingElement();
+            // 获取 ExecutableElement
+            ExecutableElement executableElement = (ExecutableElement) element;
+
+            // 判断注解的方法修饰符有没有 private、final 以及 static
+            for (Modifier modifier : executableElement.getModifiers()) {
+                if (modifier == Modifier.FINAL || modifier == Modifier.PRIVATE || modifier == Modifier.STATIC) {
+                    error(element, "@JClick method '%s' must not be private, final or static.", typeElement.asType().toString() + "." + executableElement.getSimpleName());
+                }
+            }
+
+            // 判断注解所属的类是不是 Activity 或 Fragment（包括两个包下面的） 及其子孙类
+            if (!isSubtypeOfType(typeElement.asType(), Type_Activity) && !isSubtypeOfType(typeElement.asType(), Type_Fragment) && !isSubtypeOfType(typeElement.asType(), Type_FragmentForV4)) {
+                error(element, "@JClick method must in class extends from Activity or Fragment, not in class extends from %s.", typeElement.asType().toString());
+            }
+
+            // 判断注解方法的参数是不是无参或者只有 View 的参数
+            List<? extends VariableElement> params = executableElement.getParameters();
+            if (!params.isEmpty()) {
+                for (VariableElement variableElement : params) {
+                    if (!Type_View.equals(variableElement.asType().toString())) {
+                        error(variableElement, "@JClick method parameters must be empty or one parameter of the class extends View.");
+                    }
+                }
+            }
+
+            // 注解信息初始化
+            JBindClass jBindClass = jBindClassMap.get(typeElement);
+            if (jBindClass == null) {
+                jBindClass = new JBindClass(this.elements, typeElement);
+                jBindClassMap.put(typeElement, jBindClass);
+            }
+            jBindClass.addMethod(new JClickMethod(executableElement));
+        }
+    }
+
 
     /**
      * 判断给定元素的 TypeMirror 类型是不是指定 type 的子孙类
