@@ -1,6 +1,7 @@
 package com.jinchim.jbind_sdk;
 
 
+import android.util.Log;
 import android.view.View;
 
 public class Utils {

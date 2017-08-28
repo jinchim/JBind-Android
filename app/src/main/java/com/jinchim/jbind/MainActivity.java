@@ -2,11 +2,13 @@ package com.jinchim.jbind;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.jinchim.jbind.annotations.JBind;
 import com.jinchim.jbind_sdk.JBindSDK;
 import com.jinchim.jbind_sdk.Unbinder;
+import com.jinchim.jbind_sdk.Utils;
 
 public class MainActivity extends AppCompatActivity {
 
