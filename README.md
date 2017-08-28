@@ -7,8 +7,8 @@
 在对应模块的 build.gradle 中的 dependencies 标签中加入：
 
 ``` gradle
-compile 'com.jinchim:jbind:1.0.2'
-annotationProcessor "com.jinchim:jbind-compiler:1.0.2"
+compile 'com.jinchim:jbind:1.0.3'
+annotationProcessor "com.jinchim:jbind-compiler:1.0.3"
 ```
 
 ### 初始化
