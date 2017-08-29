@@ -55,7 +55,7 @@ void onClickBtn(View v) {
 或者：
 
 ``` java
-@JClick({R.id.btn, R.io.btn2)
+@JClick({R.id.btn, R.io.btn2})
 void onClickBtn(View v) {
     ...
 }
