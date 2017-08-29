@@ -29,5 +29,5 @@ dependencies {
     compile project(':jbind_sdk')
     annotationProcessor project(':compiler')
 //    compile 'com.jinchim:jbind:1.0.2'
-//    annotationProcessor "com.jinchim:jbind-compiler:1.0.2"
+//    annotationProcessor 'com.jinchim:jbind-compiler:1.0.2'
 }

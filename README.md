@@ -8,7 +8,7 @@
 
 ``` gradle
 compile 'com.jinchim:jbind:1.0.4'
-annotationProcessor "com.jinchim:jbind-compiler:1.0.4"
+annotationProcessor 'com.jinchim:jbind-compiler:1.0.4'
 ```
 
 ### 初始化
