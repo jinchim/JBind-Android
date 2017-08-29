@@ -2,7 +2,10 @@ package com.jinchim.jbind.compiler;
 
 import com.jinchim.jbind.annotations.JClick;
 
+import java.util.List;
+
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 
 
@@ -25,8 +28,8 @@ public class JClickMethod {
         return executableElement.getSimpleName().toString();
     }
 
-    TypeMirror getMehodType() {
-        return executableElement.asType();
+    List<? extends VariableElement> getParameters() {
+        return executableElement.getParameters();
     }
 
 

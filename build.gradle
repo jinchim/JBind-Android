@@ -41,7 +41,7 @@ task clean(type: Delete) {
 ext {
     userOrg = 'jinwu1' // bintray 用户名，这个是网站上 url 上的用户名
     groupId = 'com.jinchim' // jcenter 上的路径
-    publishVersion = '1.0.3' // 版本号
+    publishVersion = '1.0.4' // 版本号
     desc = 'bindsdk' // 描述，不重要
     website = 'https://github.com/jinchim/JBind-Android' // 网站，不重要，尽量模拟 github 上的地址
     licences = ['Apache-2.0'] // 指定许可证

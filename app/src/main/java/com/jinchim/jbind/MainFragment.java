@@ -7,8 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jinchim.jbind.annotations.JBind;
+import com.jinchim.jbind.annotations.JClick;
 import com.jinchim.jbind_sdk.JBindSDK;
 import com.jinchim.jbind_sdk.Unbinder;
 
@@ -33,6 +35,18 @@ public class MainFragment extends Fragment {
 
         textView.setText("fragment1");
         textView2.setText("fragment2");
+    }
+
+    @JClick({R.id.btn, R.id.btn2})
+    void onClickBtn(View v) {
+        switch (v.getId()) {
+            case R.id.btn:
+                Toast.makeText(getActivity(), "你点击了我哦", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.btn2:
+                Toast.makeText(getActivity(), "你点击了我哦2", Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 
     @Override

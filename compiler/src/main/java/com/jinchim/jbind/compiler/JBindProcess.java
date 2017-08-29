@@ -130,6 +130,7 @@ public class JBindProcess extends AbstractProcessor {
     }
 
     private void parseJClick(Map<TypeElement, JBindClass> jBindClassMap, Set<? extends Element> elements) {
+        int tempValue = 0;
         for (Element element : elements) {
             // 检查是否为 ExecutableElement（方法）
             if (!(element instanceof ExecutableElement)) {
@@ -153,14 +154,26 @@ public class JBindProcess extends AbstractProcessor {
                 error(element, "@JClick method must in class extends from Activity or Fragment, not in class extends from %s.", typeElement.asType().toString());
             }
 
-            // 判断注解方法的参数是不是无参或者只有 View 的参数
+            // 判断注解方法的参数是不是无参或者只有一个 View 的参数
             List<? extends VariableElement> params = executableElement.getParameters();
+            if (params.size() > 1) {
+                error(element, "@JClick method parameters must be empty or one parameter of the class extends View.");
+            }
             if (!params.isEmpty()) {
                 for (VariableElement variableElement : params) {
                     if (!Type_View.equals(variableElement.asType().toString())) {
-                        error(variableElement, "@JClick method parameters must be empty or one parameter of the class extends View.");
+                        error(element, "@JClick method parameters must be empty or one parameter of the class extends View.");
                     }
                 }
+            }
+
+            // 判断一个类的注解里面的值是否相同
+            JClick click = executableElement.getAnnotation(JClick.class);
+            for (int value : click.value()) {
+                if (tempValue == value) {
+                    error(element, "@JClick values can not be the same.");
+                }
+                tempValue = value;
             }
 
             // 注解信息初始化

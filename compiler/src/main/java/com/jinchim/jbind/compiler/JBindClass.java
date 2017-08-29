@@ -1,6 +1,5 @@
 package com.jinchim.jbind.compiler;
 
-import com.jinchim.jbind.annotations.JClick;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
@@ -14,6 +13,7 @@ import java.util.List;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
 import javax.lang.model.util.Elements;
 
 public class JBindClass {
@@ -22,6 +22,7 @@ public class JBindClass {
     private static final ClassName Unbinder = ClassName.get("com.jinchim.jbind_sdk", "Unbinder");
     private static final ClassName View = ClassName.get("android.view", "View");
     private static final ClassName Utils = ClassName.get("com.jinchim.jbind_sdk", "Utils");
+    private static final ClassName View_Click = ClassName.get("android.view.View", "OnClickListener");
 
     private Elements elements;
     private TypeElement typeElement;
@@ -51,7 +52,7 @@ public class JBindClass {
                 .addModifiers(Modifier.PUBLIC)
                 // 这里是添加方法参数，需要指定参数类型和参数变量
                 // 先使用 TypeElement 的 asType() 方法拿到 TypeMirror，再使用 TypeName 的 get() 方法拿到当前注解信息所属的类名称（当前类名当然是注解所在的类），这种方法可以拿到当前注解所在的类信息
-                .addParameter(TypeName.get(typeElement.asType()), "target")
+                .addParameter(TypeName.get(typeElement.asType()), "target", Modifier.FINAL)
                 .addParameter(View, "view")
                 // 添加代码，进行为空的判断
                 .beginControlFlow("if (target == null)")
@@ -61,17 +62,34 @@ public class JBindClass {
                 .addStatement("this.target = target");
         // 增加控件绑定
         for (JBindField jBindField : jBindFields) {
-            // $N 用于指定对象成员变量，&T 用于指定类型，$L 用于方法参数
+            // $N 用于指定另外一个通过名字生成的声明，&T 用于指定类型，$L 用于指定字符串的连接（没有双引号），$S 用于指定字符串（有双引号）
             constructor.addStatement("target.$N = $T.findView(view, $L, \"field $L\", \"$L\", $L.class)", jBindField.getFiledName(), Utils, jBindField.getResId(), jBindField.getFiledName(), typeElement.getQualifiedName(), jBindField.getFiledType());
         }
         // 增加控件点击事件的代码
         for (JClickMethod jClickMethod : jClickMethods) {
+            // 匿名内部类
+            MethodSpec.Builder methodClick = MethodSpec
+                    .methodBuilder("onClick")
+                    .addAnnotation(Override.class)
+                    .addModifiers(Modifier.PUBLIC)
+                    .addParameter(View, "view");
+            if (jClickMethod.getParameters().isEmpty()) {
+                methodClick.addStatement("target.$N()", jClickMethod.getMehodName());
+            } else {
+                methodClick.addStatement("target.$N(view)", jClickMethod.getMehodName());
+            }
+            TypeSpec.Builder typeClick = TypeSpec
+                    .anonymousClassBuilder("")
+                    .addSuperinterface(View_Click)
+                    .addMethod(methodClick.build());
+            // 点击事件回调
             for (int resId : jClickMethod.getResId()) {
-                constructor.addStatement("$T view = $T.findView(view, $L, \"method $L\", \"$L\")", View, Utils, resId, jClickMethod.getMehodName(), typeElement.getQualifiedName());
+                constructor.addStatement("view$L = $T.findView(view, $L, \"method $L\", \"$L\")", resId, Utils, resId, jClickMethod.getMehodName(), typeElement.getQualifiedName());
+                constructor.addStatement("view$L.setOnClickListener($L)", resId, typeClick.build());
             }
         }
 
-        // 添加 unbind() 方法
+        // 添加 unbind() 方法，主要是释放各种引用
         MethodSpec.Builder methodUnbind = MethodSpec
                 .methodBuilder("unbind")
                 .addAnnotation(Override.class)
@@ -81,6 +99,12 @@ public class JBindClass {
                 .endControlFlow();
         for (JBindField jBindField : jBindFields) {
             methodUnbind.addStatement("target.$N = null", jBindField.getFiledName());
+        }
+        for (JClickMethod jClickMethod : jClickMethods) {
+            for (int resId : jClickMethod.getResId()) {
+                methodUnbind.addStatement("view$L.setOnClickListener(null)", resId);
+                methodUnbind.addStatement("view$L = null", resId);
+            }
         }
         methodUnbind.addStatement("target = null");
 
