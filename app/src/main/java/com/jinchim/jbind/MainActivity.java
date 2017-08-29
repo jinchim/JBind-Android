@@ -6,15 +6,15 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.jinchim.jbind.annotations.JBind;
-import com.jinchim.jbind.annotations.JClick;
+import com.jinchim.jbind.annotations.Bind;
+import com.jinchim.jbind.annotations.Click;
 import com.jinchim.jbind_sdk.JBindSDK;
 import com.jinchim.jbind_sdk.Unbinder;
 
 public class MainActivity extends AppCompatActivity {
 
-    @JBind(R.id.tv) TextView textView;
-    @JBind(R.id.tv2) TextView textView2;
+    @Bind(R.id.tv) TextView textView;
+    @Bind(R.id.tv2) TextView textView2;
 
     Unbinder unbinder;
 
@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         textView2.setText("activity2");
     }
 
-    @JClick({R.id.btn, R.id.btn2})
+    @Click({R.id.btn, R.id.btn2})
     void onClickBtn(View v) {
         switch (v.getId()) {
             case R.id.btn:

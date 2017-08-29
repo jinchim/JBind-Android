@@ -1,8 +1,8 @@
 package com.jinchim.jbind.compiler;
 
 import com.google.auto.service.AutoService;
-import com.jinchim.jbind.annotations.JBind;
-import com.jinchim.jbind.annotations.JClick;
+import com.jinchim.jbind.annotations.Bind;
+import com.jinchim.jbind.annotations.Click;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -57,8 +57,8 @@ public class JBindProcess extends AbstractProcessor {
     @Override
     public Set<String> getSupportedAnnotationTypes() {
         Set<String> annotataionTypes = new LinkedHashSet<>();
-        annotataionTypes.add(JBind.class.getCanonicalName());
-        annotataionTypes.add(JClick.class.getCanonicalName());
+        annotataionTypes.add(Bind.class.getCanonicalName());
+        annotataionTypes.add(Click.class.getCanonicalName());
         return annotataionTypes;
     }
 
@@ -73,8 +73,8 @@ public class JBindProcess extends AbstractProcessor {
         // 记录扫描到的指定的注解信息
         Map<TypeElement, JBindClass> jBindClassMap = new LinkedHashMap<>();
         // 解析指定的注解
-        parseJBind(jBindClassMap, roundEnvironment.getElementsAnnotatedWith(JBind.class));
-        parseJClick(jBindClassMap, roundEnvironment.getElementsAnnotatedWith(JClick.class));
+        parseJBind(jBindClassMap, roundEnvironment.getElementsAnnotatedWith(Bind.class));
+        parseJClick(jBindClassMap, roundEnvironment.getElementsAnnotatedWith(Click.class));
 
         // 生成代码文件
         for (TypeElement typeElement : jBindClassMap.keySet()) {
@@ -168,7 +168,7 @@ public class JBindProcess extends AbstractProcessor {
             }
 
             // 判断一个类的注解里面的值是否相同
-            JClick click = executableElement.getAnnotation(JClick.class);
+            Click click = executableElement.getAnnotation(Click.class);
             for (int value : click.value()) {
                 if (tempValue == value) {
                     error(element, "@JClick values can not be the same.");

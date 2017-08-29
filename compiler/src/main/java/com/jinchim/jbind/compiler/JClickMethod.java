@@ -1,12 +1,12 @@
 package com.jinchim.jbind.compiler;
 
-import com.jinchim.jbind.annotations.JClick;
+
+import com.jinchim.jbind.annotations.Click;
 
 import java.util.List;
 
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.TypeMirror;
 
 
 public class JClickMethod {
@@ -16,7 +16,7 @@ public class JClickMethod {
 
     JClickMethod(ExecutableElement executableElement) {
         this.executableElement = executableElement;
-        JClick click = executableElement.getAnnotation(JClick.class);
+        Click click = executableElement.getAnnotation(Click.class);
         resId = click.value();
     }
 

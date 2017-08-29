@@ -7,8 +7,8 @@
 在对应模块的 build.gradle 中的 dependencies 标签中加入：
 
 ``` gradle
-compile 'com.jinchim:jbind:1.0.4'
-annotationProcessor 'com.jinchim:jbind-compiler:1.0.4'
+compile 'com.jinchim:jbind:1.0.5'
+annotationProcessor 'com.jinchim:jbind-compiler:1.0.5'
 ```
 
 ### 初始化
@@ -40,13 +40,13 @@ public void onViewCreated(View view, Bundle savedInstanceState) {
 ### 绑定控件
 
 ``` java
-@JBind(R.id.tv) TextView textView;
+@Bind(R.id.tv) TextView textView;
 ```
 
 ### 控件点击事件监听
 
 ``` java
-@JClick(R.id.btn)
+@Click(R.id.btn)
 void onClickBtn(View v) {
     ...
 }
@@ -55,7 +55,7 @@ void onClickBtn(View v) {
 或者：
 
 ``` java
-@JClick({R.id.btn, R.io.btn2})
+@Click({R.id.btn, R.io.btn2})
 void onClickBtn(View v) {
     ...
 }
