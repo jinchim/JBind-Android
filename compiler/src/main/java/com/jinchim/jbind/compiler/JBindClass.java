@@ -19,9 +19,9 @@ import javax.lang.model.util.Elements;
 public class JBindClass {
 
     // 这里使用 ClassName 的 get() 方法拿到指定具体路径的类名称
-    private static final ClassName Unbinder = ClassName.get("com.jinchim.jbind_sdk", "Unbinder");
+    private static final ClassName Unbinder = ClassName.get("com.jinchim.api", "Unbinder");
     private static final ClassName View = ClassName.get("android.view", "View");
-    private static final ClassName Utils = ClassName.get("com.jinchim.jbind_sdk", "Utils");
+    private static final ClassName Utils = ClassName.get("com.jinchim.api", "Utils");
     private static final ClassName View_Click = ClassName.get("android.view.View", "OnClickListener");
 
     private Elements elements;

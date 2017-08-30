@@ -7,8 +7,8 @@
 在对应模块的 build.gradle 中的 dependencies 标签中加入：
 
 ``` gradle
-compile 'com.jinchim:jbind:1.0.5'
-annotationProcessor 'com.jinchim:jbind-compiler:1.0.5'
+compile 'com.jinchim:jbind:1.0.6'
+annotationProcessor 'com.jinchim:jbind-compiler:1.0.6'
 ```
 
 ### 初始化
@@ -21,7 +21,7 @@ Unbinder unbinder;
 @Override
 protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    unbinder = JBindSDK.bind(this);
+    unbinder = JBind.bind(this);
 }
 ```
 
@@ -33,7 +33,7 @@ Unbinder unbinder;
 @Override
 public void onViewCreated(View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    unbinder = JBindSDK.bind(this, view);
+    unbinder = JBind.bind(this, view);
 }
 ```
 

@@ -1,4 +1,4 @@
-package com.jinchim.jbind_sdk;
+package com.jinchim.api;
 
 
 

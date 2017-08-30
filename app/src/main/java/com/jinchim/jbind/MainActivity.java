@@ -6,10 +6,11 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jinchim.api.JBind;
+import com.jinchim.api.Unbinder;
 import com.jinchim.jbind.annotations.Bind;
 import com.jinchim.jbind.annotations.Click;
-import com.jinchim.jbind_sdk.JBindSDK;
-import com.jinchim.jbind_sdk.Unbinder;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        unbinder = JBindSDK.bind(this);
+        unbinder = JBind.bind(this);
 
         textView.setText("activity1");
         textView2.setText("activity2");

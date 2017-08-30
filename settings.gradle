@@ -1,1 +1,1 @@
-include ':app', ':compiler', ':jbind_sdk', ':annotations'
+include ':app', ':compiler', ':annotations', ':api'

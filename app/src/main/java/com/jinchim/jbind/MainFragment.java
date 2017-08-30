@@ -5,14 +5,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jinchim.api.JBind;
+import com.jinchim.api.Unbinder;
 import com.jinchim.jbind.annotations.Bind;
 import com.jinchim.jbind.annotations.Click;
-import com.jinchim.jbind_sdk.JBindSDK;
-import com.jinchim.jbind_sdk.Unbinder;
 
 
 public class MainFragment extends Fragment {
@@ -31,7 +30,7 @@ public class MainFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        unbinder = JBindSDK.bind(this, view);
+        unbinder = JBind.bind(this, view);
 
         textView.setText("fragment1");
         textView2.setText("fragment2");

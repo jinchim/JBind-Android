@@ -1,4 +1,4 @@
-package com.jinchim.jbind_sdk;
+package com.jinchim.api;
 
 import android.app.Activity;
 import android.view.View;
@@ -8,9 +8,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class JBindSDK {
+public class JBind {
 
-    private final static String TAG = JBindSDK.class.getSimpleName();
+    private final static String TAG = JBind.class.getSimpleName();
     private static Map<Class<?>, Constructor<? extends Unbinder>> map = new LinkedHashMap<>();
 
     public static Unbinder bind(Activity activity) {

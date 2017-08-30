@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 
-          package="com.jinchim.jbind_sdk"
+          package="com.jinchim.api"
 >
 
     <application android:allowBackup="true"
